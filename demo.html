@@ -1,0 +1,431 @@
+<html>
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport" content="width=750,minimum-scale=0.4,maximum-scale=1,user-scalable=no">
+    <title>Hante Web Api</title>
+</head>
+<style>
+	body{
+		padding: 20px;
+	}
+	.price_inp_lay{
+		display: flex;
+		flex-direction: row;
+		justify-content: space-around;
+	}
+
+	.price_inp_item{
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		width: 30%;
+	}
+
+	input{
+			width: 100%;
+			height: 80px;
+			font-size: 28px;
+	}
+
+	.inp_bg{
+		height: 80px;
+		color: #333333;
+
+		margin-bottom: 3px;
+	}
+
+	.button{
+		height: 100px;
+		color: #ffffff;
+		font-size: 30px;
+		background-color: #D0403F;
+		border-radius: 5px;
+		border: 1px solid #D0403F;
+	}
+
+	.loading{
+		width:100%;
+		height: 100%;
+		position: fixed;
+		top:0;
+		left: 0;
+		z-index: 100;
+		background: rgb(0, 0, 0,0.6);
+		display: none;
+	}
+		.loading .pic{
+		width: 64px;
+		height: 64px;
+		/* background: url(images/loading.gif); */
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left:0;
+		right:0;
+		margin: auto}
+
+		.loading .pic i{
+			display: block;
+			float: left;
+			width: 6px;
+			height: 50px;
+			background: #399;
+			margin: 0 2px;
+			transform: scaleY(0.4);
+			animation: load 1.2s infinite;
+		}
+		.loading .pic i:nth-child(1){animation-delay:0.1s }
+		.loading .pic i:nth-child(2){animation-delay:0.2s }
+		.loading .pic i:nth-child(3){animation-delay:0.3s }
+		.loading .pic i:nth-child(4){animation-delay: 0.4s}
+		.loading .pic i:nth-child(5){animation-delay:0.5s }
+
+			@keyframes load{
+				0%,40%,100%{transform: scaleY(0.4)}
+				20%{transform:scaleY(1) }
+			}
+.result_dialog{
+		width:100%;
+		height: 100%;
+		position: fixed;
+		top:0;
+		left: 0;
+		z-index: 100;
+		background: rgb(0, 0, 0,0.6);
+		overflow: hidden;
+		display: none;
+		
+}
+
+.result_dialog_content{
+	width:70%;
+	position: fixed;
+	top:30%;
+	left: 15%;
+	background: #ffffff;
+	border-radius: 10px;
+	overflow: hidden;
+
+}
+.result_dialog_title{
+	font-size: 30px;
+	color: #333333;
+	height: 100px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	font-weight: bold;
+	border-bottom: rgb(0, 0, 0,0.5) 1px solid;
+}
+
+
+.icon_success{
+	width: 60px;
+	height: 60px;
+	position: relative;
+	left: 45%;
+	display: none;
+}
+
+.result_dialog_message{
+	font-size: 24px;
+	color: #333333;
+	height: 100px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+
+.close_btn{
+	width: 100%;
+	background-color: #D0403F;
+	height: 80px;
+	display: flex;
+	font-size: 26px;
+	color: #ffffff;
+	justify-content: center;
+	align-items: center;
+
+}
+</style>
+
+<body>
+<p>
+<div id="show">
+</div>
+</p>
+<p>
+<div id="init">
+</div>
+</p>
+
+<div class="price_inp_lay">
+    <div class="price_inp_item">
+        <input id="amount_et" class="inp_bg" type="number"  placeholder="Amount"/>
+        <p id="amount_tv">$0.00</p>
+    </div>
+    <div class="price_inp_item">
+        <input id="tax_et" class="inp_bg" type="number" placeholder="Tax"/>
+        <p id="tax_tv">$0.00</p>
+    </div>
+    <div class="price_inp_item">
+        <input id="tip_et" class="inp_bg"  type="number" placeholder="Tip"/>
+        <p id="tip_tv">$0.00</p>
+    </div>
+</div>
+<p>
+    <input type="text" id="remark" value="Test" placeholder="Remark"/>
+</p>
+<input type="button" class="button" value="Payment" onclick="payment();"/>
+<br/>
+<br/>
+<p id="pos_order_num">Order Number</p>
+<br/>
+<div>
+    <input type="number" id="hante_transaction_id" placeholder="Transaction number"/>
+</div>
+<br/>
+<input type="button" class="button" value="SearchOrder" onclick="queryOrder();" />
+<br/>
+<br/>
+<div class="price_inp_lay">
+    <input type="number" id="refund_amount" style="width: 48%;" placeholder="Refund Amount"/>
+    <input type="button" class="button" style="width: 48%;" value="Refund" onclick="refundOrder();"/>
+</div>
+<br/>
+<br/>
+<div class="price_inp_lay">
+    <input type="text" id="web_address" style="width: 48%;" placeholder="设置Web H5 地址" />
+    <input type="button" class="button" style="width: 48%;" value="Set" onclick="setWebAddress();"/>
+</div>
+
+<br/>
+<div class="loading" id="load_dialog">
+    <div class="pic">
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+    </div>
+</div>
+
+<div class="result_dialog" id="result_dialog">
+    <div class="result_dialog_content">
+        <div id="result_dialog_title" class="result_dialog_title"></div>
+        <svg id="icon_success" t="1686377411074" class="icon_success" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2591" width="64" height="64"><path d="M512 976.742c-256.67 0-464.742-208.071-464.742-464.737C47.258 255.33 255.329 47.258 512 47.258S976.742 255.329 976.742 512c0 256.67-208.071 464.742-464.742 464.742z m225.413-754.268C575.754 328.69 473.231 647.337 473.231 647.337l-63.088-156.795-130.12 101.161c55.209 25.288 134.067 106.214 201.093 212.429C528.43 692.864 674.324 465.254 745.298 445.02c-27.597-80.921-11.822-146.678-7.885-222.546z m0 0" p-id="2592" fill="#02771e"></path></svg>
+
+        <div id="result_dialog_message" class="result_dialog_message"></div>
+        <div class="close_btn" onclick="closeDialog();">Close </div>
+    </div>
+
+</div>
+</body>
+<script>
+
+
+        function payment() {
+            //send message to native
+			//组装参数
+			document.getElementById("load_dialog").style.display="inline";
+			var amount= document.getElementById("amount_et").value;
+			var tax= document.getElementById("tax_et").value;
+			var tip= document.getElementById("tip_et").value;
+			var time= Date.now();
+			document.getElementById("pos_order_num").textContent=time;
+
+			var param = {
+				'type': 'transaction',
+				'merchantNo':'1025258896',
+				'orderNo':time,
+				'transType':'Sale'
+			};
+
+			var payAmount=amount;
+			if(null!=tax && tax>0){
+				payAmount=Number(amount)+Number(tax);
+			}
+			param['amount']=payAmount;
+
+
+			if(null!=tip && tip>0){
+				param['tipAmount']=tip;
+			}
+            window.HanteWebApi.sendMessage(param);
+        }
+
+        function connectHanteWebApi(callback) {
+            if (window.HanteWebApi && HanteWebApi.inited) {
+                callback(HanteWebApi)
+            } else {
+                document.addEventListener(
+                    'HanteWebApiReady', function() {
+                        callback(HanteWebApi)
+                    },false
+                );
+            }
+        }
+
+        connectHanteWebApi(function(bridge) {
+            bridge.init(function(message, responseCallback) {
+                console.log('init', message);
+            });
+
+            bridge.registerHandler("receiveMessage", function(data, responseCallback) {
+				document.getElementById("load_dialog").style.display="none";
+				document.getElementById("icon_success").style.display="none";
+				document.getElementById("result_dialog_message").textContent='';
+				
+				try{
+
+					var response=JSON.parse(data);
+					var resultCode=response['resultCode'];
+					var resultMsg=response['resultMsg'];
+					var type=response['type'];
+
+					document.getElementById("result_dialog").style.display="inline";
+					document.getElementById("result_dialog_title").textContent=resultCode;
+
+
+					if('FAIL'==resultCode){
+						document.getElementById("result_dialog_message").textContent=resultMsg;
+
+					}else if('SUCCESS'==resultCode){
+					    if('transaction'==type){
+                            document.getElementById("icon_success").style.display="inline";
+					    
+							var totalAmount=0;
+							var amount= document.getElementById("amount_et").value;
+							var tax= document.getElementById("tax_et").value;
+							var tip= document.getElementById("tip_et").value;
+							if(null!=amount && amount>0){
+								totalAmount =Number(amount);
+							}
+							
+							if(null!=tax && tax>0){
+								totalAmount +=Number(tax);
+							}
+							
+							if(null!=tip && tip>0){
+								totalAmount += Number(tip);
+							}
+							document.getElementById("result_dialog_message").textContent="$"+(totalAmount*0.01);
+							
+						}else if('queryOrder'==type){
+							var amount=response['amount'];
+							var tipAmount=response['tipAmount'];
+							var vendor=response['vendor'];
+							
+							var totalAmount=0;
+							if(null!=amount && amount>0){
+								totalAmount =Number(amount);
+							}
+							
+							if(null!=tipAmount && tipAmount>0){
+								totalAmount += Number(tipAmount);
+							}
+							document.getElementById("result_dialog_message").textContent=vendor+"$"+(totalAmount*0.01);
+						}
+
+					}
+				}catch(e){
+
+				}
+
+				//document.getElementById("show").innerHTML = ("Response:" + data);
+                if (responseCallback) {
+                    var responseData = "receiveMessage success!";
+                    responseCallback(responseData);
+                }
+            });
+        })
+
+		function closeDialog(){
+			document.getElementById("result_dialog").style.display="none";
+		}
+
+		function refundOrder(){
+			var transactionId=document.getElementById("hante_transaction_id").value;
+			if(null!=transactionId && transactionId.length>0){
+				var amount=document.getElementById("refund_amount").value;
+				var param = {
+					'type': 'refund',
+					'merchantNo':'1025258896',
+					'transactionId':transactionId,
+					'amount':amount
+				};
+
+				window.HanteWebApi.sendMessage(param);
+			}
+		}
+		
+		function queryOrder(){
+			var transactionId=document.getElementById("hante_transaction_id").value;
+			if(null!=transactionId && transactionId.length>0){
+				var param = {
+					'type': 'queryOrder',
+					'merchantNo':'1025258896',
+					'transactionId':transactionId,
+					
+				};
+				window.HanteWebApi.sendMessage(param);
+			}
+		}
+		
+
+		function setWebAddress(){
+			var address=document.getElementById("web_address").value;
+			if(null!=address && address.length>0){
+				var param = {
+					'type': 'setWebAddress',
+					'merchantNo':'1025258896',
+					'webAddress':address,
+				};
+				
+				window.HanteWebApi.sendMessage(param);
+			}
+		}
+
+		
+
+
+		document.getElementById("amount_et").oninput=function(e){
+			//console.log("===="+this.value)
+			if(null!=this.value && this.value.length>0){
+				var amount=(this.value*0.01).toFixed(2);
+				document.getElementById("amount_tv").textContent="$"+amount;
+			}else{
+				document.getElementById("amount_tv").textContent="$0.00";
+			}
+		};
+
+	document.getElementById("tax_et").oninput=function(e){
+			//console.log("===="+this.value)
+			if(null!=this.value && this.value.length>0){
+				var amount=(this.value*0.01).toFixed(2);
+				document.getElementById("tax_tv").textContent="$"+amount;
+			}else{
+				document.getElementById("tax_tv").textContent="$0.00";
+			}
+		};
+
+		document.getElementById("tip_et").oninput=function(e){
+				//console.log("===="+this.value)
+				if(null!=this.value && this.value.length>0){
+					var amount=(this.value*0.01).toFixed(2);
+					document.getElementById("tip_tv").textContent="$"+amount;
+				}else{
+					document.getElementById("tip_tv").textContent="$0.00";
+				}
+			};
+
+
+
+	
+
+</script>
+
+</html>
