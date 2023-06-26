@@ -5,6 +5,7 @@
 第三步: H5 页面 使用 HanteJSBridge.js  交互 <br/>
 
 使用 HanteJSBridge.js 发送消息(JSON格式) <br/>
+
   window.HanteWebApi.sendMessage({
     'type': 'transaction',
     'merchantNo':'1025258896',
@@ -12,7 +13,7 @@
     'transType':'Sale'
     });
 
-    使用 HanteJSBridge.js 发送消息
+    使用 HanteJSBridge.js 接收消息 <br/>
 
     function connectHanteWebApi(callback) {
             if (window.HanteWebApi && HanteWebApi.inited) {
@@ -24,24 +25,7 @@
                     },false
                 );
             }
-        }
-
-  使用 HanteJSBridge.js 接收消息 <br/>
-
-  
-   function connectHanteWebApi(callback) {
-   
-            if (window.HanteWebApi && HanteWebApi.inited) {
-                callback(HanteWebApi)
-            } else {
-                document.addEventListener(
-                    'HanteWebApiReady', function() {
-                        callback(HanteWebApi)
-                    },false
-                );
-            }
-        }
-
+        };
 
  connectHanteWebApi(function(bridge) {
  
@@ -52,4 +36,4 @@
             bridge.registerHandler("receiveMessage", function(data, responseCallback) {
 				          //接收消息 data
             });
-   })
+   });
