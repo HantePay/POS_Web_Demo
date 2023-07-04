@@ -6,7 +6,7 @@
 
 使用 HanteJSBridge.js 发送消息(JSON格式) <br/>
 
-3.1发起交易
+3.1发起交易 <br/>
   window.HanteWebApi.sendMessage({
     'type': 'transaction',
     'merchantNo':'1025258896',//商户号
@@ -15,14 +15,15 @@
     'amount':1,//单位美分
     'tipAmount':1,//单位美分
     });
-3.2发起退款
+    <br/>
+3.2发起退款 <br/>
 window.HanteWebApi.sendMessage({
     'type': 'refund',
     'merchantNo':'1025258896',
     'transactionId':’2023050815651846454’,
      'amount':1,//单位美分
 });
-
+<br/>
  3.3查询订单
  window.HanteWebApi.sendMessage({
 	'type':’queryOrder’,
