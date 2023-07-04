@@ -24,11 +24,11 @@ window.HanteWebApi.sendMessage({
      'amount':1,//单位美分
 });
 <br/>
- 3.3查询订单
+ 3.3查询订单<br/>
  window.HanteWebApi.sendMessage({
 	'type':’queryOrder’,
 	'merchantNo':'1025258896',
-	'orderNo':’2023050815651846454’,
+	'transactionId':’2023050815651846454’,//hante 交易流水号
 });
 
     
