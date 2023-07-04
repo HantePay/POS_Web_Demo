@@ -11,7 +11,7 @@
     'type': 'transaction',
     'merchantNo':'1025258896',//商户号
     'orderNo':’1665461679816464’,//订单号
-    'transType':'Sale'
+    'transType':'SALE'
     'amount':1,//单位美分
     'tipAmount':1,//单位美分
     });
