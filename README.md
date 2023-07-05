@@ -11,7 +11,7 @@
     'type': 'transaction',
     'merchantNo':'1025258896',//商户号
     'orderNo':’1665461679816464’,//订单号
-    'transType':'SALE'
+    'transType':'SALE',//SALE 消费 AUTH 预授权
     'amount':1,//单位美分
     'tipAmount':1,//单位美分
     });
@@ -20,11 +20,25 @@
 window.HanteWebApi.sendMessage({
     'type': 'refund',
     'merchantNo':'1025258896',
-    'transactionId':’2023050815651846454’,
-     'amount':1,//单位美分
+    'transactionId':’2023050815651846454’,//hante 交易流水号
+     'amount':1,//退款金额 单位美分
 });
 <br/>
- 3.3查询订单<br/>
+3.3待授权订单作废 <br/>
+window.HanteWebApi.sendMessage({
+    'type': 'Void',
+    'merchantNo':'1025258896',
+    'transactionId':’2023050815651846454’,//hante 交易流水号
+});
+<br/>
+3.4待授权订单授权 <br/>
+window.HanteWebApi.sendMessage({
+    'type': 'Capture',
+    'merchantNo':'1025258896',
+    'transactionId':’2023050815651846454’,//hante 交易流水号
+});
+<br/>
+ 3.5查询订单<br/>
  window.HanteWebApi.sendMessage({
 	'type':’queryOrder’,
 	'merchantNo':'1025258896',
@@ -32,7 +46,7 @@ window.HanteWebApi.sendMessage({
 });
 
     
- 3.4使用 HanteJSBridge.js 监听结果 <br/>
+ 3.6使用 HanteJSBridge.js 监听结果 <br/>
 
     function connectHanteWebApi(callback) {
             if (window.HanteWebApi && HanteWebApi.inited) {
