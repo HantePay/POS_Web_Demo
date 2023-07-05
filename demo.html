@@ -3,7 +3,7 @@
     <meta content="text/html; charset=utf-8" http-equiv="content-type">
     <meta name="format-detection" content="telephone=no">
     <meta name="viewport" content="width=750,minimum-scale=0.4,maximum-scale=1,user-scalable=no">
-    <title>Hante Web Api</title>
+    <title>WebPOS Demo</title>
 </head>
 <style>
 	body{
@@ -150,6 +150,18 @@
 	align-items: center;
 
 }
+
+	.tip_msg_lay{
+		display: flex;
+		flex-direction: column;
+		margin: 20px;
+		background-color:#ffffff;
+		color: #ffcf0b;
+		padding: 20px;
+		border-radius: 5px;
+		border: #ffcf0b 1px solid;
+		font-size: 25px;
+	}
 </style>
 
 <body>
@@ -179,8 +191,10 @@
 <p>
     <input type="text" id="remark" value="Test" placeholder="Remark"/>
 </p>
-<input type="button" class="button" value="Payment" onclick="payment();"/>
-<br/>
+<div class="price_inp_lay">
+<input type="button" class="button" style="width: 48%;" value="Sale" onclick="payment('SALE');"/>
+<input type="button" class="button" style="width: 48%;" value="Auth" onclick="payment('AUTH');"/>
+</div>
 <br/>
 <p id="pos_order_num">Order Number</p>
 <br/>
@@ -188,7 +202,13 @@
     <input type="number" id="hante_transaction_id" placeholder="Transaction number"/>
 </div>
 <br/>
-<input type="button" class="button" value="SearchOrder" onclick="queryOrder();" />
+
+<br/>
+<div class="price_inp_lay">
+	<input type="button" class="button" value="SearchOrder" style="width: 32%;" onclick="queryOrder();" />
+	<input type="button" class="button" style="width: 32%;" value="Void" onclick="orderVoid();"/>
+	<input type="button" class="button" style="width: 32%;" value="Capture" onclick="orderCapture();"/>
+</div>
 <br/>
 <br/>
 <div class="price_inp_lay">
@@ -197,10 +217,15 @@
 </div>
 <br/>
 <br/>
-<div class="price_inp_lay">
-    <input type="text" id="web_address" style="width: 48%;" placeholder="设置Web H5 地址" />
-    <input type="button" class="button" style="width: 48%;" value="Set" onclick="setWebAddress();"/>
+<div class="tip_msg_lay">
+		注意:配置WebPOS 加载地址步骤<br/>
+       第一步：点击：首页菜单(个人中心)<br/>
+       第二步：点击：个人中心(收款配置)<br/>
+       第三步：点击：收款配置(WebPOS)<br/>
+       第四步：设置WebPOS 模式，加载地址<br/>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Demo Mode(默认案例)，Shahe Mode（对接测试用），Operating Mode(生产线上用)<br/>
 </div>
+<input type="button" class="button" value="Quick Config WebPOS" onclick="changeWebConfig();" />
 
 <br/>
 <div class="loading" id="load_dialog">
@@ -227,7 +252,7 @@
 <script>
 
 
-        function payment() {
+        function payment(transType) {
             //send message to native
 			//组装参数
 			document.getElementById("load_dialog").style.display="inline";
@@ -241,7 +266,7 @@
 				'type': 'transaction',
 				'merchantNo':'1025258896',
 				'orderNo':time,
-				'transType':'Sale'
+				'transType':transType
 			};
 
 			var payAmount=amount;
@@ -328,6 +353,9 @@
 								totalAmount += Number(tipAmount);
 							}
 							document.getElementById("result_dialog_message").textContent=vendor+"$"+(totalAmount*0.01);
+						}else if('Void'==type || 'Capture'==type){
+							document.getElementById("icon_success").style.display="inline";
+							document.getElementById("result_dialog_message").textContent=""
 						}
 
 					}
@@ -347,6 +375,33 @@
 			document.getElementById("result_dialog").style.display="none";
 		}
 
+		function orderVoid(){
+			var transactionId=document.getElementById("hante_transaction_id").value;
+			if(null!=transactionId && transactionId.length>0){
+				var amount=document.getElementById("refund_amount").value;
+				var param = {
+					'type': 'Void',
+					'merchantNo':'1025258896',
+					'transactionId':transactionId,
+				};
+			
+				window.HanteWebApi.sendMessage(param);
+			}
+		}
+		
+		function orderCapture(){
+			var transactionId=document.getElementById("hante_transaction_id").value;
+			if(null!=transactionId && transactionId.length>0){
+				var param = {
+					'type': 'Capture',
+					'merchantNo':'1025258896',
+					'transactionId':transactionId,
+				};
+			
+				window.HanteWebApi.sendMessage(param);
+			}
+		}
+		
 		function refundOrder(){
 			var transactionId=document.getElementById("hante_transaction_id").value;
 			if(null!=transactionId && transactionId.length>0){
@@ -374,22 +429,15 @@
 				window.HanteWebApi.sendMessage(param);
 			}
 		}
-		
 
-		function setWebAddress(){
-			var address=document.getElementById("web_address").value;
-			if(null!=address && address.length>0){
-				var param = {
-					'type': 'setWebAddress',
-					'merchantNo':'1025258896',
-					'webAddress':address,
-				};
-				
-				window.HanteWebApi.sendMessage(param);
-			}
+
+		function changeWebConfig(){
+			var param = {
+				'type': 'webPOSConfig',
+				'merchantNo':'1025258896',
+			};
+			window.HanteWebApi.sendMessage(param);
 		}
-
-		
 
 
 		document.getElementById("amount_et").oninput=function(e){
