@@ -165,14 +165,6 @@
 </style>
 
 <body>
-<p>
-<div id="show">
-</div>
-</p>
-<p>
-<div id="init">
-</div>
-</p>
 
 <div class="price_inp_lay">
     <div class="price_inp_item">
@@ -205,11 +197,16 @@
 
 <br/>
 <div class="price_inp_lay">
-	<input type="button" class="button" value="SearchOrder" style="width: 32%;" onclick="queryOrder();" />
-	<input type="button" class="button" style="width: 32%;" value="Void" onclick="orderVoid();"/>
-	<input type="button" class="button" style="width: 32%;" value="Capture" onclick="orderCapture();"/>
+	<input type="button" class="button" value="SearchOrder" style="width: 48%;" onclick="queryOrder();" />
+	<input type="button" class="button" style="width: 48%;" value="Void" onclick="orderVoid();"/>
+	
 </div>
 <br/>
+<div class="price_inp_lay">
+	<input type="number" id="capture_amount" style="width: 32%;" placeholder="Capture Amount"/>
+	<input type="number" id="capture_tip" style="width: 32%;" placeholder="Tip Amount"/>
+	<input type="button" class="button" style="width: 32%;" value="Capture" onclick="orderCapture();"/>
+</div>
 <br/>
 <div class="price_inp_lay">
     <input type="number" id="refund_amount" style="width: 48%;" placeholder="Refund Amount"/>
@@ -363,7 +360,6 @@
 
 				}
 
-				//document.getElementById("show").innerHTML = ("Response:" + data);
                 if (responseCallback) {
                     var responseData = "receiveMessage success!";
                     responseCallback(responseData);
@@ -391,11 +387,16 @@
 		
 		function orderCapture(){
 			var transactionId=document.getElementById("hante_transaction_id").value;
+			var amount=document.getElementById("capture_amount").value;
+			var tip=document.getElementById("capture_tip").value;
+			
 			if(null!=transactionId && transactionId.length>0){
 				var param = {
 					'type': 'Capture',
 					'merchantNo':'1025258896',
 					'transactionId':transactionId,
+					'amount':amount,
+					'tipAmount':tip,
 				};
 			
 				window.HanteWebApi.sendMessage(param);
