@@ -29,8 +29,6 @@ window.HanteWebApi.sendMessage({<br/>
     'type': 'Void',<br/>
     'merchantNo':'1025258896',<br/>
     'transactionId':’2023050815651846454’,//hante 交易流水号<br/>
-     'amount':1,//单位美分<br/>
-    'tipAmount':1,//单位美分<br/>
 });
 <br/>
 3.4待授权订单授权 <br/>
@@ -38,6 +36,8 @@ window.HanteWebApi.sendMessage({<br/>
     'type': 'Capture',<br/>
     'merchantNo':'1025258896',<br/>
     'transactionId':’2023050815651846454’,//hante 交易流水号<br/>
+    'amount':1,//单位美分<br/>
+    'tipAmount':1,//单位美分<br/>
 });
 <br/>
  3.5查询订单<br/>
