@@ -261,7 +261,7 @@
 
 			var param = {
 				'type': 'transaction',
-				'merchantNo':'1025258896',
+				'merchantNo':'1101301',
 				'orderNo':time,
 				'transType':transType
 			};
@@ -377,7 +377,7 @@
 				var amount=document.getElementById("refund_amount").value;
 				var param = {
 					'type': 'Void',
-					'merchantNo':'1025258896',
+					'merchantNo':'1101301',
 					'transactionId':transactionId,
 				};
 			
@@ -393,7 +393,7 @@
 			if(null!=transactionId && transactionId.length>0){
 				var param = {
 					'type': 'Capture',
-					'merchantNo':'1025258896',
+					'merchantNo':'1101301',
 					'transactionId':transactionId,
 					'amount':amount,
 					'tipAmount':tip,
@@ -409,7 +409,7 @@
 				var amount=document.getElementById("refund_amount").value;
 				var param = {
 					'type': 'refund',
-					'merchantNo':'1025258896',
+					'merchantNo':'1101301',
 					'transactionId':transactionId,
 					'amount':amount
 				};
@@ -423,7 +423,7 @@
 			if(null!=transactionId && transactionId.length>0){
 				var param = {
 					'type': 'queryOrder',
-					'merchantNo':'1025258896',
+					'merchantNo':'1101301',
 					'transactionId':transactionId,
 					
 				};
@@ -435,7 +435,7 @@
 		function changeWebConfig(){
 			var param = {
 				'type': 'webPOSConfig',
-				'merchantNo':'1025258896',
+				'merchantNo':'1101301',
 			};
 			window.HanteWebApi.sendMessage(param);
 		}
