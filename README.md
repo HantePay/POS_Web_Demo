@@ -9,7 +9,7 @@
 3.1发起交易 <br/>
   window.HanteWebApi.sendMessage({<br/>
     'type': 'transaction',<br/>
-    'merchantNo':'1025258896',//商户号<br/>
+    'merchantNo':'1101301',//商户号<br/>
     'orderNo':’1665461679816464’,//订单号<br/>
     'transType':'SALE',//SALE 消费 AUTH 预授权<br/>
     'amount':1,//单位美分<br/>
@@ -19,7 +19,7 @@
 3.2发起退款 <br/>
 window.HanteWebApi.sendMessage({<br/>
     'type': 'refund',<br/>
-    'merchantNo':'1025258896',<br/>
+    'merchantNo':'1101301',<br/>
     'transactionId':’2023050815651846454’,//hante 交易流水号<br/>
      'amount':1,//退款金额 单位美分<br/>
 });
@@ -27,14 +27,14 @@ window.HanteWebApi.sendMessage({<br/>
 3.3待授权订单作废 <br/>
 window.HanteWebApi.sendMessage({<br/>
     'type': 'Void',<br/>
-    'merchantNo':'1025258896',<br/>
+    'merchantNo':'1101301',<br/>
     'transactionId':’2023050815651846454’,//hante 交易流水号<br/>
 });
 <br/>
 3.4待授权订单授权 <br/>
 window.HanteWebApi.sendMessage({<br/>
     'type': 'Capture',<br/>
-    'merchantNo':'1025258896',<br/>
+    'merchantNo':'1101301',<br/>
     'transactionId':’2023050815651846454’,//hante 交易流水号<br/>
     'amount':1,//单位美分<br/>
     'tipAmount':1,//单位美分<br/>
@@ -43,7 +43,7 @@ window.HanteWebApi.sendMessage({<br/>
  3.5查询订单<br/>
  window.HanteWebApi.sendMessage({<br/>
 	'type':’queryOrder’,<br/>
-	'merchantNo':'1025258896',<br/>
+	'merchantNo':'1101301',<br/>
 	'transactionId':’2023050815651846454’,//hante 交易流水号<br/>
 });
 
